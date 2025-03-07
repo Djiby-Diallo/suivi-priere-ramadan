@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi des Prières & Ramadan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        body.dark-mode {
+            background: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-weight: 600;
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 650px;
+            margin: 50px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        h2 {
+            font-weight: 600;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        input,
+        button {
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #27ae60;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #219150;
+        }
+
+        .toggle-mode {
+            background: #f39c12;
+            margin-top: 10px;
+        }
+
+        .toggle-mode:hover {
+            background: #d68910;
+        }
+
+        #current-time {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .prayer-time {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        #prayer-times {
+            margin-top: 20px;
+        }
+
+        .countdown-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e67e22;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        .countdown-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            width: 22%;
+            font-weight: bold;
+        }
+
+        .checkbox-container {
+            margin-top: 20px;
+        }
+
+        .checkbox-container input {
+            margin: 5px;
+        }
+
+        .faq-container {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .faq-item {
+            margin-top: 15px;
+        }
+
+        .faq-container h3 {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .faq-container p {
+            font-size: 16px;
+            margin: 5px 0;
+        }
+
+        #zakat-container {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        #zakat-result {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .dua-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #daily-dua {
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        #dua-translation {
+            font-size: 14px;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .faq-container,
+        #zakat-container,
+        .dua-container {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .checkbox-container {
+            width: 100%;
+            max-height: 300px;
+            overflow-y: scroll;
+        }
+
+        label {
+            font-size: 14px;
+        }
+
+        .checkbox-container input {
+            width: 15px;
+            height: 15px;
+            margin-right: 10px;
+        }
+
+        /* CSS Grid for Calendar-style Layout */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .day {
+            background: #2980b9;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .day:hover {
+            background: #3498db;
+        }
+
+        .day.selected {
+            background: #27ae60;
+            color: white;
+        }
+
+        .day.disabled {
+            background: #7f8c8d;
+            color: #ecf0f1;
+            cursor: not-allowed;
+        }
+
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .cookie-banner button {
+            width: auto;
+            margin-left: 10px;
+            max-width: 150px;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        footer {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            border-top: 2px solid #27ae60;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 5px;
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 5px;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 30px;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.2) 75%,
+                transparent 75%
+            );
+            background-size: 30px 30px;
+            animation: move-stripes 2s linear infinite;
+        }
+
+        @keyframes move-stripes {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 60px 0;
+            }
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Styles pour les badges et statistiques */
+        .stats-container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stats-header h2 {
+            margin: 0;
+        }
+        
+        .motivational-message {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 15px 0;
+            color: #f1c40f;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Styles pour les badges */
+        .badges-container {
+            margin-top: 25px;
+        }
+        
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .badge {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .badge.earned {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.7), rgba(46, 204, 113, 0.7));
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.5);
+            transform: translateY(-3px);
+        }
+        
+        .badge.locked {
+            filter: grayscale(1);
+            opacity: 0.7;
+        }
+        
+        .badge-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .badge-name {
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .badge-description {
+            font-size: 12px;
+            opacity: 0.8;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .locked-badge::after {
+            content: '🔒';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+        }
+        
+        /* Animation pour célébrer un nouveau badge */
+        @keyframes celebrate {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .celebrate {
+            animation: celebrate 0.5s ease-in-out 3;
+        }
+        
+        /* Style pour la barre de progression des badges */
+        .streak-progress {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .streak-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12, #f1c40f);
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🕌 Suivi des Prières & Ramadan</h1>
+    </header>
+
+    <div class="container">
+        <div class="user-info" id="user-info">
+            <input type="text" id="user-name" placeholder="Entrez votre nom">
+            <input type="email" id="user-email" placeholder="Entrez votre email">
+            <button onclick="saveUserInfo()">Enregistrer mes informations</button>
+        </div>
+
+        <button class="toggle-mode" onclick="toggleDarkMode()">🌙 Mode Sombre</button>
+        <p id="current-time">⏰ Heure actuelle : --:--:--</p>
+
+        <input type="text" id="city" placeholder="Entrez votre ville">
+        <button onclick="getPrayerTimes()">📅 Obtenir les horaires</button>
+
+        <div id="prayer-times"></div>
+
+        <div id="countdown-section" class="countdown-container" style="display: none;">
+            <div class="countdown-item" id="days">0 J</div>
+            <div class="countdown-item" id="hours">0 H</div>
+            <div class="countdown-item" id="minutes">0 M</div>
+            <div class="countdown-item" id="seconds">0 S</div>
+        </div>
+
+        <h2>✅ Suivi du Jeûne</h2>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="fasting-progress"></div>
+            <div class="progress-text" id="progress-text">0%</div>
+        </div>
+        <div class="progress-stats">
+            <span id="days-completed">Jours complétés: 0</span>
+            <span id="days-remaining">Jours restants: 30</span>
+        </div>
+
+        <div class="calendar" id="calendar">
+            <!-- Days will be dynamically added here -->
+        </div>
+
+        <!-- Ajout des conteneurs de statistiques et badges -->
+        <div class="stats-container">
+            <div class="stats-header">
+                <h2>📊 Statistiques & Motivation</h2>
+            </div>
+            
+            <div class="motivational-message" id="motivational-message">
+                Tu fais un excellent travail !
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="streak-count">0</div>
+                    <div class="stat-label">Jours consécutifs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completion-percentage">0%</div>
+                    <div class="stat-label">du Ramadan complété</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="best-streak">0</div>
+                    <div class="stat-label">Meilleure série</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="days-until-eid">30</div>
+                    <div class="stat-label">Jours jusqu'à l'Aïd</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="badges-container">
+            <h2>🏆 Badges & Récompenses</h2>
+            <div class="badges-grid" id="badges-grid">
+                <!-- Les badges seront ajoutés dynamiquement ici -->
+            </div>
+        </div>
+        
+
+        <div class="faq-container">
+            <h2>📚 Guide des Règles et Conseils du Ramadan</h2>
+            <div class="faq-item">
+                <h3>Quelles sont les règles du jeûne ?</h3>
+                <p>Le jeûne du Ramadan consiste à s'abstenir de manger, de boire, de fumer et d'avoir des relations sexuelles pendant les heures du jour, du lever du soleil au coucher du soleil.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Comment se préparer pour le Ramadan ?</h3>
+                <p>Il est important de se préparer mentalement, de planifier ses repas et de se rapprocher spirituellement par la prière et la lecture du Coran.</p>
+            </div>
+        </div>
+
+        <div id="zakat-container">
+            <h2>💸 Calculateur de Zakat Al-Fitr</h2>
+            <input type="number" id="food-price" placeholder="Prix du sac de riz (en FCFA)">
+            <button onclick="calculateZakat()">Calculer la Zakat</button>
+            <div id="zakat-result"></div>
+        </div>
+    </div>
+
+    <div id="cookie-banner" class="cookie-banner" style="display: none;">
+        <p>Ce site utilise des cookies pour améliorer votre expérience. En continuant à naviguer, vous acceptez notre utilisation des cookies.</p>
+        <div>
+            <button onclick="acceptCookies()">Accepter</button>
+            <button onclick="rejectCookies()">Refuser</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Suivi des Prières & Ramadan. Tous droits réservés.</p>
+        <p>Développé par Djiby Diallo</p>
+    </footer>
+
+    <script>
+        let darkMode = false;
+        let prayerTimes = {};
+        let city = '';
+        let totalDaysInRamadan = 30;
+        let selectedDays = 0;
+        let cookiesAccepted = false;
+        const USER_DATA_KEY = 'ramadanUserData';
+        const FASTING_DATA_KEY = 'ramadanFastingData';
+        const DARK_MODE_KEY = 'ramadanDarkMode';
+        
+        // Nouvelles variables pour les badges et statistiques
+        let currentStreak = 0;
+        let bestStreak = 0;
+        let selectedDaysArray = [];
+        let badges = [
+            {
+                id: "first-day",
+                name: "Premier Jour",
+                description: "Tu as complété ton premier jour de jeûne",
+                icon: "🌙",
+                requirement: 1,
+                earned: false
+            },
+            {
+                id: "streak-3",
+                name: "Série de 3 Jours",
+                description: "3 jours consécutifs de jeûne",
+                icon: "🔥",
+                requirement: 3,
+                earned: false
+            },
+            {
+                id: "streak-7",
+                name: "Série de 7 Jours",
+                description: "7 jours consécutifs de jeûne",
+                icon: "⚡",
+                requirement: 7,
+                earned: false
+            },
+            {
+                id: "mid-ramadan",
+                name: "Mi-Ramadan",
+                description: "Tu as atteint la moitié du Ramadan",
+                icon: "🌟",
+                requirement: 15,
+                earned: false
+            },
+            {
+                id: "streak-20",
+                name: "Série de 20 Jours",
+                description: "20 jours consécutifs de jeûne",
+                icon: "💪",
+                requirement: 20,
+                earned: false
+            },
+            {
+                id: "ramadan-complete",
+                name: "Ramadan Complet",
+                description: "Tu as complété tout le Ramadan",
+                icon: "🎉",
+                requirement: 30,
+                earned: false
+            }
+        ];
+
+        // Check for existing cookies/localStorage data on page load
+        window.onload = function() {
+            // Load user preferences
+            loadUserPreferences();
+            
+            // Show cookie banner if not previously accepted
+            if (!getCookie('cookiesAccepted')) {
+                document.getElementById('cookie-banner').style.display = 'flex';
+            } else {
+                cookiesAccepted = true;
+            }
+            
+            // Initialize calendar after loading data
+            generateCalendar();
+            
+            // Update progress bar
+            updateProgressBar();
+            
+            // Start current time display
+            setInterval(getCurrentTime, 1000);
+            
+            // Charger les données des badges
+            loadBadgeData();
+            
+            // Afficher les badges
+            renderBadges();
+            
+            // Calculer la série actuelle
+            calculateStreak();
+            
+            // Mettre à jour les statistiques
+            updateStats();
+        };
+
+        // Cookie Functions
+        function setCookie(name, value, days) {
+            if (!cookiesAccepted && name !== 'cookiesAccepted') return;
+            
+            const expires = new Date();
+            expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=/';
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function acceptCookies() {
+            cookiesAccepted = true;
+            setCookie('cookiesAccepted', 'true', 365);
+            document.getElementById('cookie-banner').style.display = 'none';
+            // Save current preferences after accepting cookies
+            saveUserPreferences();
+        }
+
+        function rejectCookies() {
+            cookiesAccepted = false;
+            document.getElementById('cookie-banner').style.display = 'none';
+            // We still set this cookie to remember they've made a choice
+            setCookie('cookiesAccepted', 'false', 365);
+        }
+
+        // User Information Functions
+        function saveUserInfo() {
+            const userName = document.getElementById('user-name').value;
+            const userEmail = document.getElementById('user-email').value;
+            
+            if (userName && userEmail) {
+                const userData = {
+                    name: userName,
+                    email: userEmail,
+                    lastVisit: new Date().toISOString()
+                };
+                
+                // Store in localStorage
+                localStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+                
+                // Also store in cookies if accepted
+                if (cookiesAccepted) {
+                    setCookie('userName', userName, 30);
+                    setCookie('userEmail', userEmail, 30);
+                }
+                
+                alert('Vos informations ont été enregistrées!');
+                document.getElementById('user-info').innerHTML = `<p>Bienvenue, ${userName}!</p>`;
+            } else {
+                alert('Veuillez remplir tous les champs.');
+            }
+        }
+
+        function loadUserPreferences() {
+            // Load user data
+            const userData = localStorage.getItem(USER_DATA_KEY);
+            if (userData) {
+                const parsedData = JSON.parse(userData);
+                if (document.getElementById('user-name')) {
+                    document.getElementById('user-name').value = parsedData.name;
+                }
+                if (document.getElementById('user-email')) {
+                    document.getElementById('user-email').value = parsedData.email;
+                }
+                document.getElementById('user-info').innerHTML = `<p>Bienvenue, ${parsedData.name}!</p>`;
+            }
+            
+            // Load city from cookies if available
+            const savedCity = getCookie('userCity');
+            if (savedCity && document.getElementById('city')) {
+                document.getElementById('city').value = savedCity;
+                city = savedCity;
+                getPrayerTimes();
+            }
+            
+            // Load dark mode preference
+            const savedDarkMode = localStorage.getItem(DARK_MODE_KEY);
+            if (savedDarkMode === 'true') {
+                darkMode = true;
+                document.body.classList.add('dark-mode');
+            }
+            
+            // Load fasting days data
+            loadFastingData();
+        }
+
+        function saveUserPreferences() {
+            if (cookiesAccepted) {
+                setCookie('userCity', city, 30);
+                setCookie('darkMode', darkMode, 30);
+            }
+            
+            localStorage.setItem(DARK_MODE_KEY, darkMode);
+            // Fasting data is saved in its own function
+        }
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            localStorage.setItem(DARK_MODE_KEY, darkMode);
+            if (cookiesAccepted) {
+                setCookie('darkMode', darkMode, 30);
+            }
+        }
+
+        // Current Time Display
+        function getCurrentTime() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('current-time').textContent = `⏰ Heure actuelle : ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Prayer Times Retrieval Function
+        async function getPrayerTimes() {
+            city = document.getElementById('city').value;
+            if (!city) {
+                alert('Veuillez entrer votre ville.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=Senegal&method=2`);
+                const data = await response.json();
+                
+                if (data && data.data && data.data.timings) {
+                    prayerTimes = data.data.timings;
+                    displayPrayerTimes();
+                    
+                    // Save the city preference
+                    if (cookiesAccepted) {
+                        setCookie('userCity', city, 30);
+                    }
+                    
+                    // Store prayer times in local storage for offline usage
+                    localStorage.setItem('prayerTimes', JSON.stringify({
+                        city: city,
+                        timings: prayerTimes,
+                        timestamp: new Date().toISOString()
+                    }));
+                } else {
+                    alert('Erreur lors de la récupération des horaires de prière.');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la connexion au service des horaires de prière.');
+                
+                // Try to load cached prayer times
+                const cachedPrayerTimes = localStorage.getItem('prayerTimes');
+                if (cachedPrayerTimes) {
+                    const parsedData = JSON.parse(cachedPrayerTimes);
+                    if (parsedData.city === city) {
+                        prayerTimes = parsedData.timings;
+                        displayPrayerTimes();
+                        alert('Affichage des horaires de prière mis en cache.');
+                    }
+                }
+            }
+        }
+
+        // Prayer Times Display Function
+        function displayPrayerTimes() {
+            let timesHtml = `
+                <h2>Horaires des Prières à ${city}</h2>
+                <p class="prayer-time">Fajr: ${prayerTimes.Fajr}</p>
+                <p class="prayer-time">Dhuhr: ${prayerTimes.Dhuhr}</p>
+                <p class="prayer-time">Asr: ${prayerTimes.Asr}</p>
+                <p class="prayer-time">Maghrib: ${prayerTimes.Maghrib}</p>
+                <p class="prayer-time">Isha: ${prayerTimes.Isha}</p>
+            `;
+            document.getElementById('prayer-times').innerHTML = timesHtml;
+        }
+
+        // Calendar Display for Ramadan Days
+        function generateCalendar() {
+            const calendarContainer = document.getElementById('calendar');
+            calendarContainer.innerHTML = '';  // Clear the calendar before re-rendering
+            
+            // Load fasting data
+            loadFastingData();
+            
+            for (let i = 1; i <= totalDaysInRamadan; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('day');
+                dayElement.textContent = i;
+                
+                // Mark days as selected if they're
+                // Suite de la fonction generateCalendar()
+                // Mark days as selected if they're in the selectedDaysArray
+                if (selectedDaysArray.includes(i)) {
+                    dayElement.classList.add('selected');
+                }
+                
+                dayElement.addEventListener('click', function() {
+                    toggleDaySelection(i, dayElement);
+                });
+                
+                calendarContainer.appendChild(dayElement);
+            }
+        }
+
+        // Toggle day selection in the calendar
+        function toggleDaySelection(day, element) {
+            const index = selectedDaysArray.indexOf(day);
+            
+            if (index === -1) {
+                // Day not selected, select it
+                selectedDaysArray.push(day);
+                element.classList.add('selected');
+                selectedDays++;
+            } else {
+                // Day already selected, deselect it
+                selectedDaysArray.splice(index, 1);
+                element.classList.remove('selected');
+                selectedDays--;
+            }
+            
+            // Sort the array to keep days in order
+            selectedDaysArray.sort((a, b) => a - b);
+            
+            // Save the updated data
+            saveFastingData();
+            
+            // Update the progress bar
+            updateProgressBar();
+            
+            // Recalculate streak and check for badges
+            calculateStreak();
+            checkForBadges();
+            
+            // Update stats
+            updateStats();
+        }
+
+        // Save fasting data to localStorage
+        function saveFastingData() {
+            const fastingData = {
+                selectedDaysArray: selectedDaysArray,
+                totalDaysInRamadan: totalDaysInRamadan
+            };
+            
+            localStorage.setItem(FASTING_DATA_KEY, JSON.stringify(fastingData));
+        }
+
+        // Load fasting data from localStorage
+        function loadFastingData() {
+            const savedData = localStorage.getItem(FASTING_DATA_KEY);
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                selectedDaysArray = parsedData.selectedDaysArray || [];
+                selectedDays = selectedDaysArray.length;
+                totalDaysInRamadan = parsedData.totalDaysInRamadan || 30;
+            } else {
+                selectedDaysArray = [];
+                selectedDays = 0;
+            }
+        }
+
+        // Fonction modifiée pour mettre à jour la barre de progression
+function updateProgressBar() {
+    // Pour le pourcentage de progression, on continue d'utiliser selectedDays
+    const progressPercentage = (selectedDays / totalDaysInRamadan) * 100;
+    document.getElementById('fasting-progress').style.width = `${progressPercentage}%`;
+    document.getElementById('progress-text').textContent = `${Math.round(progressPercentage)}%`;
+    
+    // Trouver le jour le plus récent (coché ou non)
+    let lastDay = 0;
+    if (selectedDaysArray.length > 0) {
+        // Trouver le jour le plus élevé parmi les jours cochés
+        lastDay = Math.max(...selectedDaysArray);
+    }
+    
+    document.getElementById('days-completed').textContent = `Jours complétés: ${selectedDays}`;
+    document.getElementById('days-remaining').textContent = `Jours restants: ${totalDaysInRamadan - lastDay}`;
+}
+
+        // Zakat calculation
+        function calculateZakat() {
+            const foodPrice = parseFloat(document.getElementById('food-price').value);
+            if (isNaN(foodPrice) || foodPrice <= 0) {
+                alert('Veuillez entrer un prix valide.');
+                return;
+            }
+            
+            // Calculate Zakat (2.5kg of staple food per person)
+            const zakatAmount = (foodPrice / 50) * 2.5; // Assuming 50kg bag
+            document.getElementById('zakat-result').textContent = `La Zakat Al-Fitr est de ${zakatAmount.toFixed(2)} FCFA par personne.`;
+        }
+
+        // Calculate the current streak of consecutive days
+        function calculateStreak() {
+            if (selectedDaysArray.length === 0) {
+                currentStreak = 0;
+                return;
+            }
+            
+            // Sort the array to ensure days are in order
+            selectedDaysArray.sort((a, b) => a - b);
+            
+            // Find the longest streak
+            let tempStreak = 1;
+            currentStreak = 1;
+            
+            for (let i = 1; i < selectedDaysArray.length; i++) {
+                if (selectedDaysArray[i] === selectedDaysArray[i-1] + 1) {
+                    tempStreak++;
+                    currentStreak = Math.max(currentStreak, tempStreak);
+                } else {
+                    tempStreak = 1;
+                }
+            }
+            
+            // Update best streak if current is better
+            bestStreak = Math.max(bestStreak, currentStreak);
+            
+            // Save the updated streak data
+            saveStreakData();
+        }
+
+        // Save streak data to localStorage
+        function saveStreakData() {
+            localStorage.setItem('ramadanStreakData', JSON.stringify({
+                currentStreak: currentStreak,
+                bestStreak: bestStreak
+            }));
+        }
+
+        // Load streak data from localStorage
+        function loadStreakData() {
+            const savedData = localStorage.getItem('ramadanStreakData');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                currentStreak = parsedData.currentStreak || 0;
+                bestStreak = parsedData.bestStreak || 0;
+            }
+        }
+
+        // Update stats display
+        function updateStats() {
+            document.getElementById('streak-count').textContent = currentStreak;
+            document.getElementById('best-streak').textContent = bestStreak;
+            document.getElementById('completion-percentage').textContent = Math.round((selectedDays / totalDaysInRamadan) * 100) + '%';
+            document.getElementById('days-until-eid').textContent = totalDaysInRamadan - selectedDays;
+            
+            // Update motivational message based on progress
+            updateMotivationalMessage();
+        }
+
+        // Update motivational message based on progress
+        function updateMotivationalMessage() {
+            const progressPercentage = (selectedDays / totalDaysInRamadan) * 100;
+            let message = '';
+            
+            if (progressPercentage === 0) {
+                message = 'Commence ton voyage spirituel !';
+            } else if (progressPercentage < 25) {
+                message = 'Bon début ! Continue ainsi !';
+            } else if (progressPercentage < 50) {
+                message = 'Tu avances bien ! Reste motivé(e) !';
+            } else if (progressPercentage < 75) {
+                message = 'Plus de la moitié terminée ! Bravo !';
+            } else if (progressPercentage < 100) {
+                message = 'Presque terminé ! Tu es formidable !';
+            } else {
+                message = 'Félicitations ! Tu as complété le Ramadan !';
+            }
+            
+            document.getElementById('motivational-message').textContent = message;
+        }
+
+        // Check for badges that should be awarded
+        function checkForBadges() {
+            // Check each badge requirement
+            badges.forEach(badge => {
+                let shouldEarn = false;
+                
+                switch(badge.id) {
+                    case 'first-day':
+                        shouldEarn = selectedDays >= 1;
+                        break;
+                    case 'streak-3':
+                        shouldEarn = currentStreak >= 3;
+                        break;
+                    case 'streak-7':
+                        shouldEarn = currentStreak >= 7;
+                        break;
+                    case 'mid-ramadan':
+                        shouldEarn = selectedDays >= 15;
+                        break;
+                    case 'streak-20':
+                        shouldEarn = currentStreak >= 20;
+                        break;
+                    case 'ramadan-complete':
+                        shouldEarn = selectedDays >= 30;
+                        break;
+                }
+                
+                // If badge should be earned and wasn't already earned
+                if (shouldEarn && !badge.earned) {
+                    badge.earned = true;
+                    saveBadgeData();
+                    
+                    // Notification pour un nouveau badge
+                    alert(`Nouveau badge débloqué : ${badge.name}!`);
+                    
+                    // Update badges display
+                    renderBadges();
+                }
+            });
+        }
+
+        // Save badge data to localStorage
+        function saveBadgeData() {
+            localStorage.setItem('ramadanBadgeData', JSON.stringify(badges));
+        }
+
+        // Load badge data from localStorage
+        function loadBadgeData() {
+            const savedData = localStorage.getItem('ramadanBadgeData');
+            if (savedData) {
+                badges = JSON.parse(savedData);
+            }
+            
+            // Also load streak data
+            loadStreakData();
+        }
+
+        // Render all badges in the grid
+        function renderBadges() {
+            const badgesGrid = document.getElementById('badges-grid');
+            badgesGrid.innerHTML = '';
+            
+            badges.forEach(badge => {
+                const badgeElement = document.createElement('div');
+                badgeElement.classList.add('badge');
+                
+                if (badge.earned) {
+                    badgeElement.classList.add('earned');
+                } else {
+                    badgeElement.classList.add('locked');
+                    badgeElement.classList.add('locked-badge');
+                }
+                
+                // Create badge content
+                const badgeContent = `
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                    <div class="badge-description">${badge.description}</div>
+                    <div class="streak-progress">
+                        <div class="streak-progress-bar" style="width: ${
+                            badge.id === 'first-day' ? Math.min(selectedDays * 100, 100) : 
+                            badge.id === 'streak-3' ? Math.min(currentStreak / 3 * 100, 100) :
+                            badge.id === 'streak-7' ? Math.min(currentStreak / 7 * 100, 100) :
+                            badge.id === 'mid-ramadan' ? Math.min(selectedDays / 15 * 100, 100) :
+                            badge.id === 'streak-20' ? Math.min(currentStreak / 20 * 100, 100) :
+                            badge.id === 'ramadan-complete' ? Math.min(selectedDays / 30 * 100, 100) : 0
+                        }%"></div>
+                    </div>
+                `;
+                
+                badgeElement.innerHTML = badgeContent;
+                badgesGrid.appendChild(badgeElement);
+            });
+        }
+
+        // Initialize the app by loading saved data and starting timers
+        function initApp() {
+            // Load user preferences
+            loadUserPreferences();
+            
+            // Generate calendar
+            generateCalendar();
+            
+            // Update the progress bar
+            updateProgressBar();
+            
+            // Load badges data
+            loadBadgeData();
+            
+            // Render badges
+            renderBadges();
+            
+            // Calculate streak
+            calculateStreak();
+            
+            // Update stats
+            updateStats();
+            
+            // Start timer for current time
+            setInterval(getCurrentTime, 1000);
+        }
+
+        // Call init on page load
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
